@@ -97,19 +97,19 @@ public class Review {
             for (int i = 0; i < text.length(); i++) {
 
                 if (text.charAt(i) == '*') {
-                    // System.out.println("I detect *");
+                    System.out.println("detect *");
                     for (int wordpositionindex = 0; wordpositionindex < fakewords.size(); wordpositionindex++) {
                         lengthOfWord = fakewords.get(wordpositionindex).getReviewWord().length();
-                        // System.out.println("word is "+fakewords.get(wordpositionindex).getReviewWord());
-                        for (int wordlengthindex = i + 1; wordlengthindex < text.length() + 1
-                                - lengthOfWord; wordlengthindex++) {
-                            // System.out.println("opposite is"+fakewords.get(wordpositionindex).getOppositeWord());
+                        System.out.println("first for" + fakewords.get(wordpositionindex).getReviewWord());
+                        for (int wordlengthindex = i + 1; wordlengthindex < lengthOfWord; wordlengthindex++) {
+                            System.out.println("second for");
                             if (text.substring(wordlengthindex, wordlengthindex + lengthOfWord)
                                     .equals(fakewords.get(wordpositionindex).getReviewWord())) {
-                                // checks for if it contains a word in the review
-                                // System.out.println("goes in the if");
+                                System.out.println("detection equals");
                                 newString += fakewords.get(wordpositionindex).getOppositeWord();
                                 i+=lengthOfWord;
+                                wordpositionindex = 0;
+                                break;
                             }
                         }
                     }
