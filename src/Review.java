@@ -85,43 +85,40 @@ public class Review {
     }
 
     public static String fakeReview(String fileName) {
-
         String filePath = fileName;
         String newString = new String();
-        int lengthOfWord = 0;
+        
         try {
             byte[] bytes = Files.readAllBytes(Paths.get(filePath));
             String text = new String(bytes, "UTF-8").trim();
-            // now I have the text
-
+            
             for (int i = 0; i < text.length(); i++) {
-
                 if (text.charAt(i) == '*') {
-                    System.out.println("detect *");
+                    // Detects the marker '*'
                     for (int wordpositionindex = 0; wordpositionindex < fakewords.size(); wordpositionindex++) {
-                        lengthOfWord = fakewords.get(wordpositionindex).getReviewWord().length();
-                        System.out.println("first for" + fakewords.get(wordpositionindex).getReviewWord());
-                        for (int wordlengthindex = i + 1; wordlengthindex < lengthOfWord; wordlengthindex++) {
-                            System.out.println("second for");
-                            if (text.substring(wordlengthindex, wordlengthindex + lengthOfWord)
-                                    .equals(fakewords.get(wordpositionindex).getReviewWord())) {
-                                System.out.println("detection equals");
-                                newString += fakewords.get(wordpositionindex).getOppositeWord();
-                                i+=lengthOfWord;
-                                wordpositionindex = 0;
-                                break;
-                            }
+                        String reviewWord = fakewords.get(wordpositionindex).getReviewWord();
+                        int lengthOfWord = reviewWord.length();
+                        
+                        // Check if the following substring matches the review word
+                        if (i + lengthOfWord <= text.length() &&
+                            text.substring(i + 1, i + 1 + lengthOfWord).equals(reviewWord)) {
+                            
+                            // Replace with opposite word
+                            newString+=fakewords.get(wordpositionindex).getOppositeWord();
+                            
+                            // Move i to the end of the review word
+                            i += lengthOfWord;
+                            break; // Exit inner loop
                         }
                     }
-
                 } else {
-                    newString += text.charAt(i);
+                    newString+=text.charAt(i);
                 }
-
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
         return newString;
     }
+    
 }
