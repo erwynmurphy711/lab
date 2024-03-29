@@ -8,7 +8,6 @@ import java.util.ArrayList;
 public class Review {
 
     private static ArrayList<Words> words = new ArrayList<Words>();
-    private static ArrayList<FakeWords> fakewords = new ArrayList<FakeWords>();
     private static ArrayList<PositiveFake> positivefakes = new ArrayList<PositiveFake>();
     private static ArrayList<NegativeFake> negativefakes = new ArrayList<NegativeFake>();
 
@@ -18,7 +17,7 @@ public class Review {
     public static double totalSentiment(String fileName) {
         String filePath = fileName;
         double num = 0;
-        try {
+        try { // This try is for extracting the message from the txt file
             byte[] bytes = Files.readAllBytes(Paths.get(filePath));
             String text = new String(bytes, "UTF-8").trim();
             num = sentimentVal(text);
@@ -39,19 +38,6 @@ public class Review {
 
     public static void addManyReviews(ArrayList<Words> list) {
         words.addAll(list);
-    }
-
-    // fakewords adding objects
-    public static void addFakeReview(FakeWords obj) {
-        fakewords.add(obj);
-    }
-
-    public static void removeFakeReview(FakeWords obj) {
-        fakewords.remove(obj);
-    }
-
-    public static void addManyFakeReviews(ArrayList<FakeWords> list) {
-        fakewords.addAll(list);
     }
 
     // postivefakes adding stuffs
