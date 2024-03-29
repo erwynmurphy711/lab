@@ -9,6 +9,8 @@ public class Review {
 
     private static ArrayList<Words> words = new ArrayList<Words>();
     private static ArrayList<FakeWords> fakewords = new ArrayList<FakeWords>();
+    private static ArrayList<PositiveFake> positivefakes = new ArrayList<PositiveFake>();
+    private static ArrayList<NegativeFake> negativefakes = new ArrayList<NegativeFake>();
 
     public Review() {
     }
@@ -52,6 +54,33 @@ public class Review {
         fakewords.addAll(list);
     }
 
+    // postivefakes adding stuffs
+    public static void addPositiveFakeReview(PositiveFake obj) {
+        positivefakes.add(obj);
+    }
+
+    public static void removePositiveFakeReview(PositiveFake obj) {
+        positivefakes.remove(obj);
+    }
+
+    public static void addManyPositiveFakeReviews(ArrayList<PositiveFake> list) {
+        positivefakes.addAll(list);
+    }
+
+    // negativefakes adding stuffs
+    public static void addNegativeFakeReview(NegativeFake obj) {
+        negativefakes.add(obj);
+    }
+
+    public static void removeNegativeFakeReview(NegativeFake obj) {
+        negativefakes.remove(obj);
+    }
+
+    public static void addManyNegativeFakeReviews(ArrayList<NegativeFake> list) {
+        negativefakes.addAll(list);
+    }
+    
+
     public static double sentimentVal(String review) {
         int lengthOfWord = 0;
         for (int i = 0; i < words.size(); i++) {
@@ -83,6 +112,22 @@ public class Review {
             return 0;
         }
     }
+    public static int stringStarRating(String review) {
+        double reviewNum = sentimentVal(review);
+        if (reviewNum < 0) {
+            return 1;
+        } else if (reviewNum > 0 && reviewNum <= 1) {
+            return 2;
+        } else if (reviewNum > 1 && reviewNum <= 2) {
+            return 3;
+        } else if (reviewNum > 2 && reviewNum <= 3) {
+            return 4;
+        } else if (reviewNum > 3) {
+            return 5;
+        } else {
+            return 0;
+        }
+    }
 
     public static String fakeReview(String fileName) {
         String filePath = fileName;
@@ -94,9 +139,9 @@ public class Review {
             
             for (int i = 0; i < text.length(); i++) {
                 if (text.charAt(i) == '*') {
-                    // Detects the marker '*'
-                    for (int wordpositionindex = 0; wordpositionindex < fakewords.size(); wordpositionindex++) {
-                        String reviewWord = fakewords.get(wordpositionindex).getReviewWord();
+                    // Detection
+                    for (int wordpositionindex = 0; wordpositionindex < positivefakes.size(); wordpositionindex++) {
+                        String reviewWord = positivefakes.get(wordpositionindex).getReviewWord();
                         int lengthOfWord = reviewWord.length();
                         
                         // Check if the following substring matches the review word
@@ -104,7 +149,24 @@ public class Review {
                             text.substring(i + 1, i + 1 + lengthOfWord).equals(reviewWord)) {
                             
                             // Replace with opposite word
-                            newString+=fakewords.get(wordpositionindex).getOppositeWord();
+                            newString+=positivefakes.get(wordpositionindex).getOppositeWord();
+                            
+                            // Move i to the end of the review word
+                            i += lengthOfWord;
+                            break; // Exit inner loop
+                        }
+                    }
+
+                    for (int wordpositionindex = 0; wordpositionindex < negativefakes.size(); wordpositionindex++) {
+                        String reviewWord = negativefakes.get(wordpositionindex).getReviewWord();
+                        int lengthOfWord = reviewWord.length();
+                        
+                        // Check if the following substring matches the review word
+                        if (i + lengthOfWord <= text.length() &&
+                            text.substring(i + 1, i + 1 + lengthOfWord).equals(reviewWord)) {
+                            
+                            // Replace with opposite word
+                            newString+=negativefakes.get(wordpositionindex).getOppositeWord();
                             
                             // Move i to the end of the review word
                             i += lengthOfWord;
@@ -119,6 +181,14 @@ public class Review {
             e.printStackTrace();
         }
         return newString;
+    }
+
+    public static void aCompleteReview(String filename){
+        System.out.println("The original rating is "+ starRating(filename) + "/5");
+        
+            System.out.println("The fake review is '" +fakeReview(filename)+"'");
+            System.out.println("The fake review rating is "+ stringStarRating(fakeReview(filename)));
+        
     }
     
 }
